@@ -47,7 +47,7 @@ public class DateHelper
      * @throws ParseException <br>
      */
     public static Date parse(String source,String format) throws ParseException{
-        if(StringUtils.isBlank(source)){
+        if(StringUtils.isBlank(source) || "null".equalsIgnoreCase(source.trim())){
             return null;
         }
         if(StringUtils.isNotBlank(format)){

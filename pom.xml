@@ -4,7 +4,7 @@
 
   <groupId>com.tenney.utils</groupId>
   <artifactId>tenney-excel2entity</artifactId>
-  <version>0.3</version>
+  <version>0.4</version>
   <packaging>jar</packaging>
 
   <name>excel2entity</name>
@@ -80,6 +80,18 @@
     </dependency>
   </dependencies>
   
+  <distributionManagement>
+	  	<repository>
+	  		<id>nexus-releases</id>
+	  		<name>Nexus Release Repository</name>
+	  		<url>http://192.168.0.186:8081/nexus/content/repositories/releases/</url>
+	  	</repository>
+	  	<snapshotRepository>
+	  		<id>nexus-snapshots</id>
+	  		<name>Nexus Snapshot Repository</name>
+	  		<url>http://192.168.0.186:8081/nexus/content/repositories/snapshots/</url>
+	  	</snapshotRepository>
+	  </distributionManagement>
   
   <build>
   	<plugins>
