@@ -33,10 +33,10 @@ import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.springframework.core.io.Resource;
 
+import com.tenney.excel2entity.ExcelConstants.ImageType;
 import com.tenney.excel2entity.lang.ExcelGuideException;
 import com.tenney.excel2entity.lang.excel.ExcelBuilder;
 import com.tenney.excel2entity.lang.xml.XmlParser;
@@ -61,17 +61,17 @@ public class ExcelGuideProvider
     private File guideConfigFile;
     private Resource[] locations;
     
-    public ExcelGuideProvider(String guideConfig) throws DocumentException, IOException{
+    public ExcelGuideProvider(String guideConfig) throws Exception{
         this.guideConfig = guideConfig;
         this._init();
     }
     
-    public ExcelGuideProvider(File guideConfigFile) throws DocumentException, IOException{
+    public ExcelGuideProvider(File guideConfigFile) throws Exception{
         this.guideConfigFile = guideConfigFile;
         this._init();
     }
     
-    public ExcelGuideProvider(Resource[] locations) throws DocumentException, IOException{
+    public ExcelGuideProvider(Resource[] locations) throws Exception{
         this.locations = locations;
         this._init();
     }
@@ -311,10 +311,9 @@ public class ExcelGuideProvider
      * 方法描述: 初始化配置 <br>
      * 创建人: 唐雄飞  <br>
      * 创建日期:2013年10月18日 <br> <br>
-     * @throws IOException 
-     * @throws DocumentException 
+     * @throws Exception 
      */
-    private void _init() throws DocumentException, IOException{
+    private void _init() throws Exception{
         logger.debug("Loading Excel-guide-plugin ...");
         List<Document> configs = new ArrayList<Document>();
         //解析locations
@@ -343,9 +342,10 @@ public class ExcelGuideProvider
      * 方法描述: 解析配置文件并生成配置 <br>
      * 创建人: 唐雄飞  <br>
      * 创建日期:2013年10月18日 <br> <br>
+     * @throws Exception 
      */
     @SuppressWarnings("unchecked")
-    private void buildGuides(List<Document> docs){
+    private void buildGuides(List<Document> docs) throws Exception{
         if(docs != null && !docs.isEmpty()){
             for(Document document: docs){
                 try
@@ -380,6 +380,9 @@ public class ExcelGuideProvider
                             throw new ExcelGuideException("实体类型class必须指定:" + eEntity.getName());
                         }
                         entity.setEntityClass(entityClass);
+                        //设置每行的高度
+                        entity.setHeightOfRows(NumberUtils.createFloat(eEntity.attributeValue(ExcelConstants.GUIDE_CONFIG_ELEMENT_ROW_HEIGHT)));
+                        
                         //解析实体字段
                         Iterator<Element> itFields = eEntity.elementIterator(ExcelConstants.GUIDE_CONFIG_FIELD);
                         while(itFields.hasNext()){
@@ -395,10 +398,25 @@ public class ExcelGuideProvider
                             field.setExcelTitle(StringUtils.trim(eField.attributeValue(ExcelConstants.GUIDE_CONFIG_FIELD_EXCEL)));
                             //排序
                             field.setIndex(NumberUtils.createInteger(StringUtils.trim(eField.attributeValue(ExcelConstants.GUIDE_CONFIG_FIELD_INDEX))));
+                            //列宽
+                            field.setWidthOfColumn(NumberUtils.toShort(eField.attributeValue(ExcelConstants.GUIDE_CONFIG_FIELD_WIDTH)));
                             //默认值 
                             field.setDefaultValue(StringUtils.trim(eField.attributeValue(ExcelConstants.GUIDE_CONFIG_FIELD_DFVALUE)));
                             //数据类型
                             field.setDataType(StringUtils.trim(eField.attributeValue(ExcelConstants.GUIDE_CONFIG_FIELD_DATATYPE)));
+                            if(ExcelConstants.DATA_TYPE_IMAGE.equals(field.getDataType())){
+                            	//图片类型
+                                String imageType = StringUtils.trimToEmpty(eField.attributeValue(ExcelConstants.GUIDE_CONFIG_FIELD_IMAGETYPE));
+                                if(StringUtils.isBlank(imageType)){
+                                	throw new Exception("图片字段必须设置图片类型(imageType)字段!");
+                                }
+                                try {
+    								field.setImageType(ImageType.valueOf(imageType.toUpperCase()));
+    							} catch (Exception e) {
+    								throw new Exception("不支持的图片类型，可选类型为jpg/png");
+    							}
+                            }
+                            
                             field.setNullable(BooleanUtils.toBoolean(StringUtils.trim(eField.attributeValue(ExcelConstants.GUIDE_CONFIG_FIELD_NULLABLE))));
                             //是否允许为空
                             if(!field.getNullable() && StringUtils.isBlank(field.getDefaultValue())){
@@ -452,11 +470,11 @@ public class ExcelGuideProvider
                 } catch (Exception e)
                 {
                     logger.error("解析配置文件出错：" + e.getMessage() ,e);
-                    e.printStackTrace();
+                    throw new Exception("解析配置文件出错：" + e.getMessage() ,e);
                 }
             }
         }else{
-            logger.info("Loaded 0 document for excel guide .");
+            logger.warn("未加载任何配置信息 .");
         }
     }
     

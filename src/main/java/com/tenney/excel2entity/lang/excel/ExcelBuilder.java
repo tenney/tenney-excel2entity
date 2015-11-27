@@ -50,7 +50,7 @@ public class ExcelBuilder
      */
     public static Workbook getWorkBookInstance(String fileSuffix)
     {
-        if(ExcelConstants.EXCEL_FILE_SUFFIX_XLS.equals(StringUtils.trimToEmpty(fileSuffix))){
+        if(ExcelConstants.EXCEL_FILE_SUFFIX_XLS.equals(StringUtils.trimToEmpty(fileSuffix).toLowerCase())){
         	return new HSSFWorkbook();
         }
         return new XSSFWorkbook();

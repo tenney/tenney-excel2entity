@@ -12,10 +12,13 @@
 
 package com.tenney.excel2entity.support;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.tenney.excel2entity.ExcelConstants;
+import com.tenney.excel2entity.ExcelConstants.ImageType;
 
 /**
  * 类说明: <br/>
@@ -25,50 +28,19 @@ import java.util.Map;
  */
 public class GuideEntityField implements Comparable<GuideEntityField>
 {
-    /**
-     * 字段名
-     */
-    String name;
 
-    /**
-     * 表格标题
-     */
-    String excelTitle;
-
-    /**
-     * 表格顺序
-     */
-    Integer index = 0;
-
-    /**
-     * 数据类型
-     */
-    String dataType;
-
-    /**
-     * 日期转换格式
-     */
-    String format;
+	private String name;//字段名
+    private String excelTitle;//表格标题
+    private Integer index = 0;//表格顺序
+    private String dataType;//数据类型
+    private String format;//日期转换格式
+    private Boolean imported = true;//数据导入时，是否需要提供该字段
+    private Boolean convert;//字段是否需要转换输出
+    private Boolean nullable;//是否允许为空
+    private String defaultValue;//默认值
     
-    /**
-     * 数据导入时，是否需要提供该字段
-     */
-    Boolean imported = true;
-
-    /**
-     * 字段是否需要转换输出
-     */
-    Boolean convert;
-
-    /**
-     * 是否允许为空
-     */
-    Boolean nullable;
-
-    /**
-     * 默认值
-     */
-    String defaultValue;
+    private Short widthOfColumn;  //X个字符的宽度
+    private ExcelConstants.ImageType imageType = ImageType.PNG; //图片类型
 
     /**
      * 需要转换的子集
@@ -250,8 +222,40 @@ public class GuideEntityField implements Comparable<GuideEntityField>
     {
         this.convert = convert;
     }
+    
+	/**
+	 * widthOfColumn的getter方法
+	 * @return the widthOfColumn
+	 */
+	public Short getWidthOfColumn() {
+		return widthOfColumn;
+	}
 
-    /**
+	/**
+	 * widthOfColumn的setter方法
+	 * @param widthOfColumn the widthOfColumn to set
+	 */
+	public void setWidthOfColumn(Short widthOfColumn) {
+		this.widthOfColumn = widthOfColumn;
+	}
+
+	/**
+	 * imageType的getter方法
+	 * @return the imageType
+	 */
+	public ExcelConstants.ImageType getImageType() {
+		return imageType;
+	}
+
+	/**
+	 * imageType的setter方法
+	 * @param imageType the imageType to set
+	 */
+	public void setImageType(ExcelConstants.ImageType imageType) {
+		this.imageType = imageType;
+	}
+
+	/**
      * entrys的getter方法
      * 
      * @return the entrys

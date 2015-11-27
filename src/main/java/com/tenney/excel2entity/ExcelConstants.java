@@ -55,16 +55,19 @@ public class ExcelConstants
     public static final String GUIDE_CONFIG_ELEMENT_ID = "id";
     public static final String GUIDE_CONFIG_ELEMENT_NAME = "name";
     public static final String GUIDE_CONFIG_ELEMENT_CLASS = "class";
+    public static final String GUIDE_CONFIG_ELEMENT_ROW_HEIGHT = "rowHeight";
     
     /**
      * 配置文件字段
      */
     public static final String GUIDE_CONFIG_FIELD = "field";
     public static final String GUIDE_CONFIG_FIELD_NAME = "name";
+    public static final String GUIDE_CONFIG_FIELD_WIDTH = "width";
     public static final String GUIDE_CONFIG_FIELD_EXCEL = "excelTitle";
     public static final String GUIDE_CONFIG_FIELD_INDEX = "index";
     public static final String GUIDE_CONFIG_FIELD_DFVALUE = "defaultValue";
     public static final String GUIDE_CONFIG_FIELD_DATATYPE = "dataType";
+    public static final String GUIDE_CONFIG_FIELD_IMAGETYPE = "imageType";
     public static final String GUIDE_CONFIG_FIELD_FORMAT = "format";
     public static final String GUIDE_CONFIG_FIELD_NULLABLE = "nullable";
     public static final String GUIDE_CONFIG_FIELD_CONVERT = "convert";
@@ -83,5 +86,16 @@ public class ExcelConstants
     public static final String DATA_TYPE_DOUBLE = "Double";
     public static final String DATA_TYPE_DATE = "Date";
     public static final String DATA_TYPE_DATE_SYSDATE = "sysDate";
+    public static final String DATA_TYPE_IMAGE = "image";
     
+    /**
+	 * 图片类型
+	 *类说明:<br/>
+	 *创建人:唐雄飞<br/>
+	 *创建日期:2015年11月27日<br/> 
+	 *
+	 */
+	public enum ImageType {
+		PNG,JPG
+	}
 }

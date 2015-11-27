@@ -1,6 +1,5 @@
 /**
  * 版权所有：tenney
- * 项目名称: eicsp
  * 类名称:GuideEntity.java
  * 包名称:com.tenney.excel2entity.support
  * 
@@ -25,20 +24,11 @@ import java.util.TreeSet;
  */
 public class GuideEntity
 {
-    /**
-     * 实体ID
-     */
-    private String eid;
-
-    /**
-     * 实体名
-     */
-    private String eName;
-
-    /**
-     * 实体对象类
-     */
-    private String entityClass;
+    private String eid;//实体ID
+    private String eName;//实体名
+    private String entityClass;//实体对象类
+    
+    private Float heightOfRows = -1f; //行高，像素点， -1代表默认
 
     /**
      * 实体对象字段集_TreeSet提供Comparable按字段的index进行排序 
@@ -127,8 +117,24 @@ public class GuideEntity
     {
         this.entityClass = entityClass;
     }
-
+    
     /**
+	 * heightOfRows的getter方法
+	 * @return the heightOfRows
+	 */
+	public Float getHeightOfRows() {
+		return heightOfRows;
+	}
+
+	/**
+	 * heightOfRows的setter方法
+	 * @param heightOfRows the heightOfRows to set
+	 */
+	public void setHeightOfRows(Float heightOfRows) {
+		this.heightOfRows = heightOfRows;
+	}
+
+	/**
      * fields的getter方法
      * 
      * @return the fields

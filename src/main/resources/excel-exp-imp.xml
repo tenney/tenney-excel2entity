@@ -13,21 +13,24 @@
 			3、依赖于spring的core包，用于集成在spring项目中时，支持classpath:*的方式加载配置文件
 			4、暂时未做线程同步安全考虑、对于大量数据的处理应该有瓶颈，使用时，自行考虑数据量的问题。
 	
-		id		实体配置ID，需要保证其唯一性
-		name	导出excel时的sheet名称，保存时的文件名
-		class	转换记录数据载体，支持Map 和  domain
+		id			实体配置ID，需要保证其唯一性
+		name		导出excel时的sheet名称，保存时的文件名
+		class		转换记录数据载体，支持Map 和  domain
+		rowHeight	记录行高，像素为单位
 	 -->
-	<entity id="guideSimpleDemo" name="导出配置测试" class="java.util.HashMap">
+	<entity id="guideSimpleDemo" name="导出配置测试" class="java.util.HashMap" rowHeight="80">
 		<!-- 
 			name			实体字段名/Map键名
 			excelTile		Excel标题
 			index			Excel字段顺序
-			dataType		对应JAVA的数据类型，支持String,Long,Integer,Double,Date
+			dataType		对应JAVA的数据类型，支持String,Long,Integer,Double,Date,image
+				+-  image:该字段只支持导出，不支持导入， 且数据集必须为File对象
 			nullable		导入数据时，该字段是否允许为空，若为false,则最好指定 defaultValue的值
 			defaultValue	导入数据时，若字段值为空时，默认取该值
 			format			dataType为Date时，需要指定的格式化日期
 			convert			是否需要字段转换 ,如 ：F/M >> 女/男 ,如果指定该值为true,则必须提供子元素集合
 			imported		导入时是否需要提供数据  add by TXF 2013-11-04
+			width			列宽，以一个字符的宽度为单位
 		 -->
 		<field name="name" excelTitle="资源标题" index="1" dataType="String" nullable="true" defaultValue=""></field>
 		<field name="state" excelTitle="资源状态" index="2" dataType="Integer" nullable="false" defaultValue="1" convert="true">
@@ -36,6 +39,6 @@
 		</field>
 		<field name="createDate" excelTitle="上传时间" index="3" dataType="Date" format="yyyy年MM月dd日" nullable="false" defaultValue="sysdate"></field>
 		<field name="resType" excelTitle="资源类型" index="4" dataType="String"  nullable="false" defaultValue="aa"></field>
-		<field name="resSource" excelTitle="资源来源" index="4" dataType="String"  nullable="false" defaultValue="aa"></field>
+		<field name="thumb" excelTitle="图片" index="5" dataType="image" imageType="png" nullable="true" width="20"/>
 	</entity>
 </guides>
