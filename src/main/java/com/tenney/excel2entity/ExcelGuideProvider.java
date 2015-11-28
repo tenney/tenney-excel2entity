@@ -415,6 +415,8 @@ public class ExcelGuideProvider
     							} catch (Exception e) {
     								throw new Exception("不支持的图片类型，可选类型为jpg/png");
     							}
+                                
+                                field.setImported(false); //图片字段提供导入
                             }
                             
                             field.setNullable(BooleanUtils.toBoolean(StringUtils.trim(eField.attributeValue(ExcelConstants.GUIDE_CONFIG_FIELD_NULLABLE))));

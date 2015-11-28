@@ -103,7 +103,6 @@ public class ExcelExportToExcel
                 cell.setCellValue(field.getExcelTitle());
             }
             
-//            ConvertUtils.register(converter, clazz);
             
             //填充数据内容
             if(dataSet != null && !dataSet.isEmpty()){
@@ -169,7 +168,7 @@ public class ExcelExportToExcel
                                     	}else if(cellValue instanceof BufferedImage){
                                     		bufferImg = (BufferedImage)cellValue;
                                     	}else{
-                                    		throw new Exception("不支持的图片数据类型,允许为File/InputStream");
+                                    		throw new ExcelGuideException("不支持的图片数据类型,允许为File/BufferedImage");
                                     	}
                                     	//图片的导出
                                     	ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
@@ -209,10 +208,8 @@ public class ExcelExportToExcel
                                 dataCell.setCellValue(ExcelBuilder.getRichTextString(workbook, null));
                             }
                             
-                        }catch(ExcelGuideException e){
-                            //对象不支持的错，继续往外抛出，避免错误数据继续读取
-                            throw new ExcelGuideException(e);
-                        } catch (Exception e)
+                        }
+                        catch (Exception e)
                         {
                             dataCell.setCellStyle(ExcelBuilder.buildErrorStyle(workbook));
 //                            dataCell.setCellValue(new HSSFRichTextString("[ERROR]" + e.getMessage()));
@@ -231,7 +228,6 @@ public class ExcelExportToExcel
                             dataCell.setCellComment(comment);
                             
                             logger.error("导出表格数据出错：" + field,e);
-                            e.printStackTrace();
                         }
                     }
                 }

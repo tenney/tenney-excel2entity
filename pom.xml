@@ -4,7 +4,7 @@
 
   <groupId>com.tenney.utils</groupId>
   <artifactId>tenney-excel2entity</artifactId>
-  <version>0.5</version>
+  <version>0.5.1</version>
   <packaging>jar</packaging>
 
   <name>excel2entity</name>

@@ -24,7 +24,7 @@
 			excelTile		Excel标题
 			index			Excel字段顺序
 			dataType		对应JAVA的数据类型，支持String,Long,Integer,Double,Date,image
-				+-  image:该字段只支持导出，不支持导入， 且数据集必须为File对象
+				+-  image:该字段只支持导出，不支持导入， 且数据集必须为File/BufferedImage
 			nullable		导入数据时，该字段是否允许为空，若为false,则最好指定 defaultValue的值
 			defaultValue	导入数据时，若字段值为空时，默认取该值
 			format			dataType为Date时，需要指定的格式化日期
@@ -39,6 +39,6 @@
 		</field>
 		<field name="createDate" excelTitle="上传时间" index="3" dataType="Date" format="yyyy年MM月dd日" nullable="false" defaultValue="sysdate"></field>
 		<field name="resType" excelTitle="资源类型" index="4" dataType="String"  nullable="false" defaultValue="aa"></field>
-		<field name="thumb" excelTitle="图片" index="5" dataType="image" imageType="png" nullable="true" width="20"/>
+		<field name="thumb" excelTitle="图片" index="5" dataType="image" imageType="png" nullable="true" width="20" imported="false"/>
 	</entity>
 </guides>
