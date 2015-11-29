@@ -206,6 +206,35 @@ public class ExcelImportFromInput
     }
     
     /**
+     * 
+     * 方法描述:获取第一个sheet的最大行号，最后一行的行号<br>
+     * 创建人:唐雄飞<br>
+     * 创建日期:2015年11月29日<br>
+     * @return<br>
+     */
+    public Integer getMaxRows(){
+    	if(null != this.workbook){
+    		Sheet sheet = this.workbook.getSheetAt(0);
+    		return sheet.getLastRowNum();
+    	}
+    	return 0;
+    }
+    /**
+     * 
+     * 方法描述:<br>
+     * 创建人:唐雄飞<br>
+     * 创建日期:2015年11月29日<br>
+     * @return<br>
+     */
+    public Integer getPhysicalNumberOfRows(){
+    	if(null != this.workbook){
+    		Sheet sheet = this.workbook.getSheetAt(0);
+    		return sheet.getPhysicalNumberOfRows();
+    	}
+    	return 0;
+    }
+    
+    /**
      * entity的getter方法
      * @return the entity
      */
