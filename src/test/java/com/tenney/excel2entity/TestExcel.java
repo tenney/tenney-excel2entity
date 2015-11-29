@@ -16,8 +16,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,11 +26,9 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import org.apache.poi.ss.usermodel.Workbook;
-import org.dom4j.DocumentException;
 import org.junit.Test;
 
 import com.tenney.excel2entity.ExcelConstants.ImageType;
-import com.tenney.excel2entity.lang.ExcelGuideException;
 import com.tenney.excel2entity.lang.excel.ExcelBuilder;
 import com.tenney.excel2entity.support.ICallBackMessage;
 import com.tenney.excel2entity.support.IExcelReadCallBack;
@@ -84,33 +82,33 @@ public class TestExcel {
         System.out.println("导出成功->" + file);
 	}
 	
-//	@Test
-//	public void testImport() throws ExcelGuideException, DocumentException, IOException{
-//		//导入数据测试
-//      ExcelGuideProvider excelGuideProvider = new ExcelGuideProvider("D:\\Intellij\\product\\branches\\eicsp\\grails-app\\conf\\resource\\excel-exp-imp.xml");
-//      FileOutputStream fos = new FileOutputStream("C:\\Users\\tenney\\Desktop\\导入结果.xls");
-//      File input = new File("C:\\Users\\tenney\\Desktop\\系统角色列表.xls");
-//      //正常导出
-////      Collection<SysRole> roles = excelGuideProvider.readFromExcel(input, "sysRoleExportToEntity",fos);
-////      System.out.println(roles);
-//      
-//      //回写导出测试
-//      excelGuideProvider.readFromExcel(new FileInputStream(input), "sysRoleExportToEntity",fos,new IExcelReadCallBack<Map<String,Object>>(){
-//
-//		/**
-//		 * 方法描述:
-//		 * @see com.tenney.excel2entity.support.IExcelReadCallBack#mapRow(java.lang.Object, org.apache.poi.ss.usermodel.Workbook)
-//		 * @param voBean
-//		 * @param workbook
-//		 * @return
-//		 */
-//		@Override
-//		public ICallBackMessage mapRow(Map<String, Object> voBean, Workbook workbook) {
-//			System.out.println("回调了:" + voBean.get("name"));
-//            return new TextAndStyleMessage("成功",ExcelBuilder.buildMessageStyle(workbook));
-//		}
-//          
-//      });
-//	}
+	@Test
+	public void testImport() throws Exception{
+		//导入数据测试
+      ExcelGuideProvider excelGuideProvider = new ExcelGuideProvider("D:\\Intellij\\product\\branches\\eicsp\\grails-app\\conf\\resource\\excel-exp-imp.xml");
+      FileOutputStream fos = new FileOutputStream("C:\\Users\\tenney\\Desktop\\导入结果.xls");
+      File input = new File("C:\\Users\\tenney\\Desktop\\系统角色列表.xls");
+      //正常导出
+//      Collection<SysRole> roles = excelGuideProvider.readFromExcel(input, "sysRoleExportToEntity",fos);
+//      System.out.println(roles);
+      
+      //回写导出测试
+      Collection<Map<String,Object>> dataSet = excelGuideProvider.readFromExcel(new FileInputStream(input), "sysRoleExportToEntity",fos,new IExcelReadCallBack<Map<String,Object>>(){
+
+		/**
+		 * 方法描述:
+		 * @see com.tenney.excel2entity.support.IExcelReadCallBack#mapRow(java.lang.Object, org.apache.poi.ss.usermodel.Workbook)
+		 * @param voBean
+		 * @param workbook
+		 * @return
+		 */
+		@Override
+		public ICallBackMessage mapRow(Map<String, Object> voBean, Workbook workbook) {
+			System.out.println("回调了:" + voBean.get("name"));
+            return new TextAndStyleMessage("成功",ExcelBuilder.buildMessageStyle(workbook));
+		}
+          
+      });
+	}
 
 }

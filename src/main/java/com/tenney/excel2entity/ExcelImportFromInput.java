@@ -56,6 +56,17 @@ public class ExcelImportFromInput
     {
         super();
     }
+    
+    /**
+     * 
+     * ExcelImportFromInput.java的构造函数
+     * @param workbook
+     */
+    public ExcelImportFromInput(Workbook workbook){
+    	super();
+        this.workbook = workbook;
+    }
+    
     /**
      * ExcelImportFromInput.java的构造函数
      * @param entity
