@@ -35,6 +35,7 @@ import com.tenney.excel2entity.support.GuideEntityField;
 import com.tenney.excel2entity.support.ICallBackMessage;
 import com.tenney.excel2entity.support.IExcelEntity;
 import com.tenney.excel2entity.support.IExcelReadCallBack;
+import com.tenney.excel2entity.support.IExcelReadInterruptCallBack;
 
 /**
  * 类说明: <br/>
@@ -115,6 +116,8 @@ public class ExcelImportFromInput
             //遍历表格
             for(int idx = ExcelConstants.TITLE_ROW_IDX + 1 ; idx <= lastRowIndex ; idx++){
                 titleRow = sheet.getRow(idx);
+                String titleName = "";
+                Short cols = 0;
                 try
                 {
                     if(titleRow == null) continue;  //如果空行，直接跳过
@@ -127,10 +130,11 @@ public class ExcelImportFromInput
                     	voBean = Class.forName(clazz).newInstance();
                     }
                     for(Short r = 0; r < colNum; r++){
+                    	cols = r;
                         Cell content = titleRow.getCell(r);
                         
                         //根据标题字符串，取对应的配置项字段
-                        String titleName = titleMap.get(r);
+                        titleName = titleMap.get(r);
                         GuideEntityField cField = this.entity.getFieldMap().get(titleName.trim());
                         if(cField == null){
                             throw new ExcelGuideException("无效的字段:[行:" + idx + ",列：" + r + "]-->" + titleName);
@@ -194,14 +198,22 @@ public class ExcelImportFromInput
                     dataSet.add((T)voBean);
                     //方法回调 
                     if(callBack != null){
-                        //回调方法
-                        ICallBackMessage message = callBack.mapRow((T)voBean,workbook);
-                        if(message != null){
-                            Cell messageCell = titleRow.createCell((short)(colNum));
-                            messageCell.setCellValue(ExcelBuilder.getRichTextString(workbook, message.getMessage()));
-                            if(message.getStyle() != null){
-                                messageCell.setCellStyle(message.getStyle());
+                        try{
+                        	//回调方法
+                            ICallBackMessage message = callBack.mapRow((T)voBean,workbook);
+                            if(message != null){
+                                Cell messageCell = titleRow.createCell((short)(colNum));
+                                messageCell.setCellValue(ExcelBuilder.getRichTextString(workbook, message.getMessage()));
+                                if(message.getStyle() != null){
+                                    messageCell.setCellStyle(message.getStyle());
+                                }
                             }
+                        }catch(Exception e){
+                        	if(callBack instanceof IExcelReadInterruptCallBack)
+                        	{
+                        		logger.error("记录读取被中断，原因：" + e.getMessage() ,e);
+                        		throw new Exception("记录读取被中断，原因：" + e.getMessage());
+                        	}
                         }
                     }
                 } catch (Exception e)
@@ -210,6 +222,10 @@ public class ExcelImportFromInput
                     errorCell.setCellStyle(ExcelBuilder.buildErrorStyle(workbook));
                     errorCell.setCellValue(ExcelBuilder.getRichTextString(workbook, "[失败]" + e.getMessage()));
                     logger.error("解析表格数据出错：" + e.getMessage(),e);
+                    
+                    if(callBack != null && (callBack instanceof IExcelReadInterruptCallBack)){
+                    	throw new ExcelGuideException("解析表格数据出错：[行：" + idx + ",列：" + cols + "]-->" + titleName + "|" + e.getMessage());
+                    }
                 }
             }
         }

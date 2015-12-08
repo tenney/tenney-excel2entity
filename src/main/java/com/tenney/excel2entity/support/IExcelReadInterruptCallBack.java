@@ -1,30 +1,28 @@
 /**
- * 版权所有：tenney
- * 项目名称: eicsp
- * 类名称:IExcelReadCallBack.java
+ * 版权所有：Nanjing Being information technology Co., LTD
+ * 项目名称: tenney-excel2entity
+ * 类名称:IExcelReadInterruptCallBack.java
  * 包名称:com.tenney.excel2entity.support
  * 
- * 创建日期:2013年10月25日 下午8:37:32
- * 创建人： 唐雄飞		
- * <修改人>      <时间>      <版本号>    <描述>
- * 唐雄飞      2013年10月25日     	V1.0.0        N/A
+ * 创建日期:2015年12月8日 
+ * 创建人:唐雄飞		
+ * <author>      <time>      <version>    <desc>
+ * 唐雄飞     下午9:47:21     	V1.0        N/A
  */
 
 package com.tenney.excel2entity.support;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
-import com.tenney.excel2entity.support.ICallBackMessage;
-
 /**
- * 类说明: 行数据读取结果回写接口,用于将读取Excel数据的操作结果回写到Excel中 <br/>
- * 创建人: 唐雄飞 <br/>
- * 创建日期:2013年10月25日 <br/>
+ *类说明:<br/>
+ *创建人:唐雄飞<br/>
+ *创建日期:2015年12月8日<br/> 
+ * @param <T>
  * 
  */
-public interface IExcelReadCallBack<T>
-{
-    /**
+public interface IExcelReadInterruptCallBack<T> extends IExcelReadCallBack<T> {
+	/**
      * 
      * 方法描述: 每读取一行数据，将回调该方法 <br>
      * 创建人: 唐雄飞 <br>
