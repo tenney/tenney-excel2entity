@@ -34,5 +34,5 @@ public interface IExcelReadCallBack<T>
      * @param workbook 当前操作表格对象
      * @return 回写给excel表格的信息 <br>
      */
-    ICallBackMessage mapRow(T voBean, Workbook workbook);
+    ICallBackMessage mapRow(T voBean, Workbook workbook) throws Exception;
 }
