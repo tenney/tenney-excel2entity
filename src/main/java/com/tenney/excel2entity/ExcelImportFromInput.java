@@ -120,7 +120,7 @@ public class ExcelImportFromInput
                 Short cols = 0;
                 try
                 {
-                    if(titleRow == null) continue;  //如果空行，直接跳过
+                    if(titleRow == null || titleRow.getFirstCellNum() < 0) continue;  //如果空行，直接跳过
                     Object voBean = null;
                     //兼容Map接口配置
                     String clazz = this.entity.getEntityClass();
@@ -158,9 +158,11 @@ public class ExcelImportFromInput
 //                            else if(ExcelConstants.DATA_TYPE_INTEGER.equals(cField.getDataType())){
 //                                HSSFRichTextString rString = content.getRichStringCellValue();
 //                                readData = Integer.valueOf(rString.getString());
-//                            }else if(ExcelConstants.DATA_TYPE_DOUBLE.equals(cField.getDataType())){
-//                                readData = content.getNumericCellValue();
-//                            }else if(ExcelConstants.DATA_TYPE_LONG.equalsIgnoreCase(cField.getDataType())){
+//                            }
+                            else if(ExcelConstants.DATA_TYPE_DOUBLE.equals(cField.getDataType())){
+                                readData = content.getNumericCellValue();
+                            }
+//                            else if(ExcelConstants.DATA_TYPE_LONG.equalsIgnoreCase(cField.getDataType())){
 //                                HSSFRichTextString rString = content.getRichStringCellValue();
 //                                readData = Long.valueOf(rString.getString());
 //                            }
@@ -181,7 +183,7 @@ public class ExcelImportFromInput
                         }
                         //判断非空值字段
                         if(readData == null && !cField.getNullable()){
-                            throw new ExcelGuideException("非空字段未指定值:" + cField.getExcelTitle());
+                            throw new ExcelGuideException("该字段为必填:" + cField.getExcelTitle());
                         }
                         /**
                          * 属性赋值
@@ -241,22 +243,47 @@ public class ExcelImportFromInput
      */
     public Integer getMaxRows(){
     	if(null != this.workbook){
-    		Sheet sheet = this.workbook.getSheetAt(0);
-    		return sheet.getLastRowNum();
-    	}
-    	return 0;
-    }
-    /**
-     * 
-     * 方法描述:<br>
-     * 创建人:唐雄飞<br>
-     * 创建日期:2015年11月29日<br>
-     * @return<br>
-     */
-    public Integer getPhysicalNumberOfRows(){
-    	if(null != this.workbook){
-    		Sheet sheet = this.workbook.getSheetAt(0);
-    		return sheet.getPhysicalNumberOfRows();
+//    		Sheet sheet = this.workbook.getSheetAt(0);
+//    		System.out.println(sheet.getPhysicalNumberOfRows());
+//    		System.out.println(sheet.getLastRowNum());
+//    		System.out.println("----------------------");
+//    		try{
+//    			int lastRowIndex = sheet.getLastRowNum();
+//        		for(int idx = ExcelConstants.TITLE_ROW_IDX ; idx < lastRowIndex ; idx++){
+//        			 
+//        			Row r = sheet.getRow(idx); 
+//        			if((r == null || r.getFirstCellNum() < 0) && idx < lastRowIndex ){
+//        				logger.info("deleted row:" + (idx + 1));
+//        				sheet.shiftRows(idx + 1, sheet.getLastRowNum(),-1);
+//        			}
+////        			System.out.println(r.getFirstCellNum());
+//        			if(idx == lastRowIndex){
+//        				Row removingRow=sheet.getRow(idx);
+//            			if(removingRow != null)
+//            				sheet.removeRow(removingRow);
+//        			}
+//        			
+//        			lastRowIndex = sheet.getLastRowNum();
+//        			
+//        			if(r != null){
+//        				System.out.println(r.getFirstCellNum() + "--------------");
+//        				for(short i = 0 ; i < r.getLastCellNum(); i++){
+//            				Cell c = r.getCell(i);
+//            				System.out.print(c != null ? c.getStringCellValue():"" + "|");
+//            			}
+//            			System.out.println(" --");
+//        			}
+//        		}
+//        		
+//        		FileOutputStream fos = new FileOutputStream("C:\\Users\\tenney\\Desktop\\bb.xlsx");
+//        		this.workbook.write(fos);
+//        		fos.flush();
+//        		fos.close();
+//    		}catch(Exception e){
+//    			logger.warn("清理表格空行出现异常！" + e.getMessage(), e);
+//    		}
+//    		return sheet.getLastRowNum();
+    		return this.workbook.getSheetAt(0).getPhysicalNumberOfRows();
     	}
     	return 0;
     }

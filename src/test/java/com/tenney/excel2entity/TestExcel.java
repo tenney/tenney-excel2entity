@@ -15,7 +15,9 @@ package com.tenney.excel2entity;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -25,6 +27,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;
 
@@ -80,6 +83,25 @@ public class TestExcel {
         provider.WriteToExcel(fos, "guideSimpleDemo", dataSet,"XLSX");
         
         System.out.println("导出成功->" + file);
+	}
+	
+	@Test
+	public void testGetLength() {
+		try {
+			String file = TestExcel.class.getResource("/excel-exp-imp.xml").getFile();
+			ExcelGuideProvider provider = new ExcelGuideProvider(file);
+			
+			File input = new File("C:\\Users\\tenney\\Desktop\\aa.xlsx");
+			System.out.println(provider.getMaxRows(new FileInputStream(input) , true));
+		} catch (InvalidFormatException e) {
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Test

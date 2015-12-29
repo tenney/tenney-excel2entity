@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.IOUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.springframework.core.io.Resource;
@@ -86,8 +87,13 @@ public class ExcelGuideProvider
      * @throws IOException 
      * @throws InvalidFormatException 
      */
-    public Integer getMaxRows(InputStream is) throws InvalidFormatException, IOException{
-    	return new ExcelImportFromInput(ExcelBuilder.readWorkbook(is)).getMaxRows();
+    public Integer getMaxRows(InputStream is, boolean closeOnFinshed) throws InvalidFormatException, IOException{
+    	try{
+    		return new ExcelImportFromInput(ExcelBuilder.readWorkbook(is)).getMaxRows();
+    	}finally{
+    		if(closeOnFinshed)
+    			IOUtils.closeQuietly(is);
+    	}
     }
     /**
      * 
@@ -100,32 +106,14 @@ public class ExcelGuideProvider
      * @throws IOException<br>
      */
     public Integer getMaxRows(File excelFile) throws InvalidFormatException, IOException{
-    	return new ExcelImportFromInput(ExcelBuilder.readWorkbook(new FileInputStream(excelFile))).getMaxRows();
-    }
-    /**
-     * 
-     * 方法描述:<br>
-     * 创建人:唐雄飞<br>
-     * 创建日期:2015年11月29日<br>
-     * @return<br>
-     * @throws IOException 
-     * @throws InvalidFormatException 
-     */
-    public Integer getPhysicalNumberOfRows(InputStream is) throws InvalidFormatException, IOException{
-    	return new ExcelImportFromInput(ExcelBuilder.readWorkbook(is)).getPhysicalNumberOfRows();
-    }
-    /**
-     * 
-     * 方法描述:<br>
-     * 创建人:唐雄飞<br>
-     * 创建日期:2015年11月29日<br>
-     * @param excelFile
-     * @return
-     * @throws InvalidFormatException
-     * @throws IOException<br>
-     */
-    public Integer getPhysicalNumberOfRows(File excelFile) throws InvalidFormatException, IOException{
-    	return new ExcelImportFromInput(ExcelBuilder.readWorkbook(new FileInputStream(excelFile))).getPhysicalNumberOfRows();
+    	
+    	FileInputStream fis = null;
+    	try{
+    		fis = new FileInputStream(excelFile);
+    		return new ExcelImportFromInput(ExcelBuilder.readWorkbook(fis)).getMaxRows();
+    	}finally{
+    		IOUtils.closeQuietly(fis);
+    	}
     }
     
     /**

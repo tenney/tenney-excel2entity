@@ -15,6 +15,7 @@ package com.tenney.excel2entity;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Date;
@@ -35,6 +36,7 @@ import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFDrawing;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -162,17 +164,21 @@ public class ExcelExportToExcel
                                         dataCell.setCellValue(NumberUtils.toLong(cellValue.toString(),0l));
                                     }
                                     else if(ExcelConstants.DATA_TYPE_IMAGE.equalsIgnoreCase(field.getDataType())){
-                                    	BufferedImage bufferImg = null;
+                                    	byte[] imageByte = null;
                                     	if(cellValue instanceof File){
-                                    		bufferImg = ImageIO.read((File)cellValue);
+                                    		File image = (File)cellValue;
+                                    		if(image != null && image.length() > 0)
+                                    			imageByte = IOUtils.toByteArray(new FileInputStream((File)cellValue));
+//                                    			bufferImg = ImageIO.read(image);
                                     	}else if(cellValue instanceof BufferedImage){
-                                    		bufferImg = (BufferedImage)cellValue;
+                                    		BufferedImage bufferImg = (BufferedImage)cellValue;
+                                    		//图片的导出
+                                        	ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
+                                        	ImageIO.write(bufferImg, field.getImageType().name(), byteArrayOut);
+                                        	imageByte = byteArrayOut.toByteArray();
                                     	}else{
                                     		throw new ExcelGuideException("不支持的图片数据类型,允许为File/BufferedImage");
                                     	}
-                                    	//图片的导出
-                                    	ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-                                    	ImageIO.write(bufferImg, field.getImageType().name(), byteArrayOut);
                                     	
                                     	/**
                                     	 * 关于HSSFClientAnchor(dx1,dy1,dx2,dy2,col1,row1,col2,row2)的参数：
@@ -197,7 +203,7 @@ public class ExcelExportToExcel
                                     	if(field.getImageType() == ImageType.JPG){
                                     		PICTURE_TYPE = XSSFWorkbook.PICTURE_TYPE_JPEG;
                                     	}
-                                    	patriarch.createPicture(anchor,workbook.addPicture(byteArrayOut.toByteArray(), PICTURE_TYPE));
+                                    	patriarch.createPicture(anchor,workbook.addPicture(imageByte, PICTURE_TYPE));
                                     }
                                     else{
                                         dataCell.setCellValue(ExcelBuilder.getRichTextString(workbook, cellValue.toString()));
@@ -205,7 +211,7 @@ public class ExcelExportToExcel
                                 }
                             }
                             else{
-                                dataCell.setCellValue(ExcelBuilder.getRichTextString(workbook, null));
+                                dataCell.setCellValue(ExcelBuilder.getRichTextString(workbook, ""));
                             }
                             
                         }

@@ -41,4 +41,9 @@
 		<field name="resType" excelTitle="资源类型" index="4" dataType="String"  nullable="false" defaultValue="aa"></field>
 		<field name="thumb" excelTitle="图片" index="5" dataType="image" imageType="png" nullable="true" width="20" imported="false"/>
 	</entity>
+	<entity id="sysRoleExportToEntity" name="导入测试" class="Map">
+		<field name="name" excelTitle="名称" index="1" dataType="String" nullable="true"></field>
+		<field name="name1" excelTitle="字段1" index="2" dataType="String" nullable="true"></field>
+		<field name="name2" excelTitle="字段2" index="3" dataType="String" nullable="true"></field>
+	</entity>
 </guides>
