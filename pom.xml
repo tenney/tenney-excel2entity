@@ -4,14 +4,14 @@
 
   <groupId>com.tenney.utils</groupId>
   <artifactId>tenney-excel2entity</artifactId>
-  <version>0.5.6</version>
+  <version>0.5.7</version>
   <packaging>jar</packaging>
 
   <name>excel2entity</name>
   <url>http://maven.apache.org</url>
 
   <properties>
-  	<apache.poi.version>3.9</apache.poi.version>
+  	<apache.poi.version>3.14</apache.poi.version>
   	<spring.version>4.1.6.RELEASE</spring.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -34,12 +34,18 @@
   			</exclusion>
   		</exclusions>
   	</dependency>
+  	<dependency>
+		<groupId>dom4j</groupId>
+		<artifactId>dom4j</artifactId>
+		<version>1.6.1</version>
+	</dependency>
   	
   	<dependency>
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-core</artifactId>
   		<version>${spring.version}</version>
   		<scope>provided</scope>
+  		<optional>true</optional>
   	</dependency>
   	
   	<dependency>
