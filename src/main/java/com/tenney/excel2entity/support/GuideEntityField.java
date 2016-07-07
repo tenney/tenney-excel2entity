@@ -284,7 +284,7 @@ public class GuideEntityField implements Comparable<GuideEntityField>
     @Override
     public int compareTo(GuideEntityField entity)
     {
-        if(this.getIndex() == null || entity.getIndex() == null || entity.getIndex() == this.getIndex()){
+        if(this.getIndex() == null || entity.getIndex() == null || entity.getIndex().equals(this.getIndex())){
             return entity.getName().compareTo(this.getName());
         }
         return entity.getIndex() < this.getIndex() ? 1:-1;
@@ -333,7 +333,7 @@ public class GuideEntityField implements Comparable<GuideEntityField>
      * @return <br>
      */
     public String getEntryKey(String eValue){
-        if(this.entrys != null || StringUtils.isBlank(eValue)){
+        if(this.entrys != null && StringUtils.isBlank(eValue)){
             for(String v : this.entrys.keySet()){
                 if(eValue.equals(this.entrys.get(v))){
                     return v;

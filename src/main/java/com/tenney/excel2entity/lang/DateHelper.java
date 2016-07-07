@@ -31,10 +31,6 @@ public class DateHelper
      * 默认时间格式化格式
      */
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
-    /**
-     * 日期格式化对象
-     */
-    public static final SimpleDateFormat SIMPE_DATA_FORMAT =  new SimpleDateFormat(DEFAULT_DATE_FORMAT);
     
     /**
      * 
@@ -50,12 +46,7 @@ public class DateHelper
         if(StringUtils.isBlank(source) || "null".equalsIgnoreCase(source.trim())){
             return null;
         }
-        if(StringUtils.isNotBlank(format)){
-            SIMPE_DATA_FORMAT.applyPattern(format);
-            return SIMPE_DATA_FORMAT.parse(source);
-        }else{
-            return SIMPE_DATA_FORMAT.parse(source);
-        }
+		return new SimpleDateFormat(StringUtils.isNotBlank(format) ? format : DEFAULT_DATE_FORMAT).parse(source);
     }
     
     /**
@@ -71,11 +62,6 @@ public class DateHelper
         if(null == source){
             return "";
         }
-        if(StringUtils.isNotBlank(format)){
-            SIMPE_DATA_FORMAT.applyPattern(format);
-            return SIMPE_DATA_FORMAT.format(source);
-        }else{
-            return SIMPE_DATA_FORMAT.format(source);
-        }
+		return new SimpleDateFormat(StringUtils.isNotBlank(format) ? format : DEFAULT_DATE_FORMAT).format(source);
     }
 }

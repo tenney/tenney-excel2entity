@@ -237,13 +237,14 @@ public class ExcelBuilder
 //                    cellValue = cell.getDateCellValue();
                     cellValue = DateUtil.getJavaDate(cell.getNumericCellValue());
                 }else{
-                    double value = cell.getNumericCellValue();
-                    DecimalFormat dformat = new DecimalFormat();
-                    // 单元格设置成常规
-                    if (cell.getCellStyle().getDataFormatString().equals("General")) {
-                        dformat.applyPattern("#");
-                    }
-                    cellValue = dformat.format(value);
+                	cellValue = cell.getNumericCellValue();
+//                    double value = cell.getNumericCellValue();
+//                    DecimalFormat dformat = new DecimalFormat();
+//                    // 单元格设置成常规
+//                    if (cell.getCellStyle().getDataFormatString().equals("General")) {
+//                        dformat.applyPattern("#");
+//                    }
+//                    cellValue = dformat.format(value);
                 }
                 break;
             case Cell.CELL_TYPE_STRING:
