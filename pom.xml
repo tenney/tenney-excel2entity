@@ -4,15 +4,15 @@
 
   <groupId>com.tenney.utils</groupId>
   <artifactId>tenney-excel2entity</artifactId>
-  <version>0.5.7</version>
+  <version>0.5.8</version>
   <packaging>jar</packaging>
 
   <name>excel2entity</name>
   <url>http://maven.apache.org</url>
 
   <properties>
-  	<apache.poi.version>3.14</apache.poi.version>
-  	<spring.version>4.1.6.RELEASE</spring.version>
+  	<apache.poi.version>3.17</apache.poi.version>
+  	<spring.version>5.0.0.RELEASE</spring.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   
@@ -60,11 +60,6 @@
     	<version>3.4</version>
     </dependency>
     
-    <dependency>
-    	<groupId>log4j</groupId>
-    	<artifactId>log4j</artifactId>
-    	<version>1.2.17</version>
-    </dependency>
     <dependency>
     	<groupId>org.slf4j</groupId>
     	<artifactId>slf4j-log4j12</artifactId>

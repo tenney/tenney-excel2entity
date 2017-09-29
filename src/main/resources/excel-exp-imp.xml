@@ -19,6 +19,7 @@
 		rowHeight	记录行高，像素为单位
 	 -->
 	<entity id="guideSimpleDemo" name="导出配置测试" class="java.util.HashMap" rowHeight="80">
+		<title name="title" excelTitle="这只是一个标题" dateType="String" rowspan="2" colspan="4"></title>
 		<!-- 
 			name			实体字段名/Map键名
 			excelTile		Excel标题

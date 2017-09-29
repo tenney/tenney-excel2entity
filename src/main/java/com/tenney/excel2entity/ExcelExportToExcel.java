@@ -17,6 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -36,6 +37,7 @@ import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFDrawing;
@@ -47,6 +49,7 @@ import com.tenney.excel2entity.lang.ExcelGuideException;
 import com.tenney.excel2entity.lang.excel.ExcelBuilder;
 import com.tenney.excel2entity.support.GuideEntity;
 import com.tenney.excel2entity.support.GuideEntityField;
+import com.tenney.excel2entity.support.GuideTitle;
 import com.tenney.excel2entity.support.IExcelEntity;
 
 /**
@@ -90,25 +93,51 @@ public class ExcelExportToExcel
             //创建sheet
             Sheet sheet = ExcelBuilder.buildExcelSheet(workbook, entity);
             CellStyle titleStyle = ExcelBuilder.buildTitleStyle(workbook);
+            CellStyle titlenameStyle = ExcelBuilder.buildTitlenameStyle(workbook);
 
             //填充标题 
             Row titleRow = sheet.createRow(ExcelConstants.TITLE_ROW_IDX);
+            GuideTitle title = this.entity.getTitle();
+            System.out.println(title);
             short idx = 0;
-            for(GuideEntityField field : this.entity.getFields()){
-                Cell cell = titleRow.createCell(idx++);
-                cell.setCellStyle(titleStyle);
-                if(!field.getImported()){
-//                	cell.setCellComment();
+            if(title != null){
+            	CellRangeAddress cra=new CellRangeAddress(0, title.getRowspan(), 0, title.getColspan()); 
+            	sheet.addMergedRegion(cra);  
+            	Cell cell_1 = titleRow.createCell(0);  
+            	cell_1.setCellStyle(titlenameStyle);
+            	cell_1.setCellValue(title.getExcelTitle());
+            	
+            	Row titleRow1 = sheet.createRow(title.getRowspan() + 1);
+            	for(GuideEntityField field : this.entity.getFields()){
+                    Cell cell = titleRow1.createCell(idx++);
+                    cell.setCellStyle(titleStyle);
+                    if(!field.getImported()){
+//                    	cell.setCellComment();
+                    }
+//                    HSSFRichTextString fieldText = new HSSFRichTextString(field.getExcelTitle());
+//                    cell.setCellValue(fieldText);
+                    cell.setCellValue(field.getExcelTitle());
                 }
-//                HSSFRichTextString fieldText = new HSSFRichTextString(field.getExcelTitle());
-//                cell.setCellValue(fieldText);
-                cell.setCellValue(field.getExcelTitle());
+            }else{
+            	 for(GuideEntityField field : this.entity.getFields()){
+                     Cell cell = titleRow.createCell(idx++);
+                     cell.setCellStyle(titleStyle);
+                     if(!field.getImported()){
+//                     	cell.setCellComment();
+                     }
+//                     HSSFRichTextString fieldText = new HSSFRichTextString(field.getExcelTitle());
+//                     cell.setCellValue(fieldText);
+                     cell.setCellValue(field.getExcelTitle());
+                 }
             }
-            
             
             //填充数据内容
             if(dataSet != null && !dataSet.isEmpty()){
-                int rowIndex = ExcelConstants.TITLE_ROW_IDX + 1;
+				int rowIndex = ExcelConstants.TITLE_ROW_IDX +1;
+				if(title != null){
+					rowIndex = title.getRowspan() + 2;
+				}
+               
                 for(Object data:dataSet){
                     short cell = 0;
                     //创建行，在标题行下面
@@ -146,7 +175,15 @@ public class ExcelExportToExcel
                                 //如果是需要转换的类型，则取转换后的值,引时不再判断数据类型，
                                 if(field.getConvert()){
                                     cellValue = field.getEntrys().get(cellValue.toString());
-                                    dataCell.setCellValue(ExcelBuilder.getRichTextString(workbook, String.valueOf(cellValue)));
+                                    Object[] object = field.getEntrys().values().toArray();
+                                    String[] strs = Arrays.asList(object).toArray(new String[0]);
+                                    sheet.addValidationData(ExcelBuilder.setDataValidation(sheet,strs,1,5000,field.getIndex()-1 ,field.getIndex()-1));
+                                    if(cellValue != null){
+                                    	  dataCell.setCellValue(ExcelBuilder.getRichTextString(workbook, String.valueOf(cellValue)));
+                                    }else{
+                                    	  dataCell.setCellValue(ExcelBuilder.getRichTextString(workbook, ""));
+                                    }
+                                  
                                 }else{
                                   //根据数据类型填充表格数据
                                     if(ExcelConstants.DATA_TYPE_DATE.equalsIgnoreCase(field.getDataType())){
@@ -206,7 +243,7 @@ public class ExcelExportToExcel
                                     	patriarch.createPicture(anchor,workbook.addPicture(imageByte, PICTURE_TYPE));
                                     }
                                     else{
-                                        dataCell.setCellValue(ExcelBuilder.getRichTextString(workbook, cellValue.toString()));
+                                    		 dataCell.setCellValue(ExcelBuilder.getRichTextString(workbook, cellValue.toString()));
                                     }
                                 }
                             }

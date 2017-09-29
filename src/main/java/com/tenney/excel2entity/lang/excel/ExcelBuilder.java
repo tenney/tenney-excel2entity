@@ -12,26 +12,38 @@
 
 package com.tenney.excel2entity.lang.excel;
 
-import com.tenney.excel2entity.ExcelConstants;
-import com.tenney.excel2entity.support.GuideEntity;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.POIXMLDocument;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFRichTextString;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
-import java.text.DecimalFormat;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.poifs.filesystem.FileMagic;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataValidation;
+import org.apache.poi.ss.usermodel.DataValidationConstraint;
+import org.apache.poi.ss.usermodel.DataValidationHelper;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.RichTextString;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.tenney.excel2entity.ExcelConstants;
+import com.tenney.excel2entity.support.GuideEntity;
 
 /**
  * 类说明: <br/>
@@ -97,7 +109,7 @@ public class ExcelBuilder
          * 第四个参数是下面区域可见的首行。
          */
      // 冻结第一行 
-        sheet.createFreezePane(0, 1, 0, 1);
+//        sheet.createFreezePane(0, 1, 0, 1);
         return sheet;
     }
     
@@ -112,20 +124,20 @@ public class ExcelBuilder
     public static CellStyle buildTitleStyle(Workbook workbook){
         CellStyle style = workbook.createCellStyle();
         // 设置这些样式
-        style.setFillForegroundColor(HSSFColor.TAN.index);
+        style.setFillForegroundColor(HSSFColorPredefined.TAN.getIndex());
 //        style.setFillBackgroundColor(HSSFColor.TEAL.index);
-        style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         
-        style.setBottomBorderColor(HSSFColor.GREY_50_PERCENT.index);
-        style.setLeftBorderColor(HSSFColor.GREY_50_PERCENT.index);
-        style.setRightBorderColor(HSSFColor.GREY_50_PERCENT.index);
-        style.setTopBorderColor(HSSFColor.GREY_50_PERCENT.index);
+        style.setBottomBorderColor(HSSFColorPredefined.GREY_50_PERCENT.getIndex());
+        style.setLeftBorderColor(HSSFColorPredefined.GREY_50_PERCENT.getIndex());
+        style.setRightBorderColor(HSSFColorPredefined.GREY_50_PERCENT.getIndex());
+        style.setTopBorderColor(HSSFColorPredefined.GREY_50_PERCENT.getIndex());
         
-        style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-        style.setBorderLeft(HSSFCellStyle.BORDER_MEDIUM);
-        style.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);
-        style.setBorderTop(HSSFCellStyle.BORDER_MEDIUM);
-        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.MEDIUM);
+        style.setBorderRight(BorderStyle.MEDIUM);
+        style.setBorderTop(BorderStyle.MEDIUM);
+        style.setAlignment(HorizontalAlignment.CENTER);
         
         Font font = workbook.createFont();
         font.setColor(IndexedColors.ORANGE.getIndex());
@@ -135,12 +147,58 @@ public class ExcelBuilder
 //        	font.setColor(HSSFColor.BLUE.index);
 //        }
         font.setFontHeightInPoints((short) 10);
-        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        font.setBold(true);
         // 把字体应用到当前的样式
         style.setFont(font);
         
         return style;
     }
+    
+    /**
+     * 
+     * 方法描述: 创建表格标题行的样式 <br>
+     * 创建人: 唐雄飞  <br>
+     * 创建日期:2013年10月21日 <br>
+     * @param workbook
+     * @return <br>
+     */
+    public static CellStyle buildTitlenameStyle(Workbook workbook){
+        CellStyle style = workbook.createCellStyle();
+        // 设置这些样式
+        style.setFillForegroundColor((short) 13);
+//        style.setFillBackgroundColor(HSSFColor.TEAL.index);
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        style.setWrapText(true);
+        
+        style.setBottomBorderColor(HSSFColorPredefined.GREY_50_PERCENT.getIndex());
+        style.setLeftBorderColor(HSSFColorPredefined.GREY_50_PERCENT.getIndex());
+        style.setRightBorderColor(HSSFColorPredefined.GREY_50_PERCENT.getIndex());
+        style.setTopBorderColor(HSSFColorPredefined.GREY_50_PERCENT.getIndex());
+        
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.MEDIUM);
+        style.setBorderRight(BorderStyle.MEDIUM);
+        style.setBorderTop(BorderStyle.MEDIUM);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        style.setAlignment(HorizontalAlignment.CENTER);
+
+        Font font = workbook.createFont();
+        font.setColor(IndexedColors.BLUE.getIndex());
+//        if(workbook instanceof XSSFWorkbook){
+//        	font.setColor(IndexedColors.BLUE.getIndex());
+//        }else{
+//        	font.setColor(HSSFColor.BLUE.index);
+//        }
+        font.setFontHeightInPoints((short) 16);
+        font.setBold(true);
+        // 把字体应用到当前的样式
+        style.setFont(font);
+        
+        return style;
+    }
+    
+    
+    
     /**
      * 
      * 方法描述: 创建错误行的样式<br>
@@ -151,14 +209,14 @@ public class ExcelBuilder
      */
     public static CellStyle buildErrorStyle(Workbook workbook){
         CellStyle errorStyle = workbook.createCellStyle();
-        errorStyle.setFillForegroundColor(HSSFColor.YELLOW.index);
-        errorStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        errorStyle.setFillForegroundColor(HSSFColorPredefined.YELLOW.getIndex());
+        errorStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         Font font = workbook.createFont();
 //        font.setColor(HSSFColor.RED.index);
         if(workbook instanceof XSSFWorkbook){
         	font.setColor(IndexedColors.BLUE.getIndex());
         }else{
-        	font.setColor(HSSFColor.BLUE.index);
+        	font.setColor(HSSFColorPredefined.BLUE.getIndex());
         }
         errorStyle.setFont(font);
         return errorStyle;
@@ -174,13 +232,13 @@ public class ExcelBuilder
      */
     public static CellStyle buildMessageStyle(Workbook workbook){
         CellStyle msgStyle = workbook.createCellStyle();
-        msgStyle.setFillForegroundColor(HSSFColor.LIME.index);
-        msgStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        msgStyle.setFillForegroundColor(HSSFColorPredefined.LIME.getIndex());
+        msgStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         Font font = workbook.createFont();
         if(workbook instanceof XSSFWorkbook){
         	font.setColor(IndexedColors.BLUE.getIndex());
         }else{
-        	font.setColor(HSSFColor.BLUE.index);
+        	font.setColor(HSSFColorPredefined.BLUE.getIndex());
         }
         msgStyle.setFont(font);
         return msgStyle;
@@ -202,10 +260,12 @@ public class ExcelBuilder
     	if (!input.markSupported()) {  
     		input = new PushbackInputStream(input, 8);  
     	} 
-        if (POIFSFileSystem.hasPOIFSHeader(input)) {
+    	if(FileMagic.OLE2 == FileMagic.valueOf(input)) {
+//        if (POIFSFileSystem.hasPOIFSHeader(input)) {
             return new HSSFWorkbook(input);
         }
-        if (POIXMLDocument.hasOOXMLHeader(input)) {
+        if(FileMagic.OOXML == FileMagic.valueOf(input)) {
+//        if (POIXMLDocument.hasOOXMLHeader(input)) {
             return new XSSFWorkbook(OPCPackage.open(input));
         }
         throw new IllegalArgumentException("无法识别的Excel文档.");
@@ -262,5 +322,23 @@ public class ExcelBuilder
                 break;
         }
         return cellValue;
+    }
+    
+    
+    
+	public static DataValidation setDataValidation(Sheet sheet, String[] textList, int firstRow, int endRow, int firstCol, int endCol) {
+
+        DataValidationHelper helper = sheet.getDataValidationHelper();
+        //加载下拉列表内容
+        DataValidationConstraint constraint = helper.createExplicitListConstraint(textList);
+        constraint.setExplicitListValues(textList);
+        
+        //设置数据有效性加载在哪个单元格上。四个参数分别是：起始行、终止行、起始列、终止列
+        CellRangeAddressList regions = new CellRangeAddressList((short) firstRow, (short) endRow, (short) firstCol, (short) endCol);
+    
+        //数据有效性对象
+        DataValidation data_validation = helper.createValidation(constraint, regions);
+    
+        return data_validation;
     }
 }

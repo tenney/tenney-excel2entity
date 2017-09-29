@@ -75,6 +75,9 @@ public class ExcelConstants
     public static final String GUIDE_CONFIG_FIELD_ENTRY = "entry";
     public static final String GUIDE_CONFIG_ENTRY_KEY = "key";
     public static final String GUIDE_CONFIG_ENTRY_VALUE = "value";
+    public static final String GUIDE_CONFIG_TITLE = "title";
+    public static final String GUIDE_CONFIG_TITLE_ROWSPAN = "rowspan";
+    public static final String GUIDE_CONFIG_TITLE_COLSPAN = "colspan";
     
     
     /**

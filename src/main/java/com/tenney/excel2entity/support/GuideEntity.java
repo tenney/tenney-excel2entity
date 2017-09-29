@@ -30,6 +30,7 @@ public class GuideEntity
     
     private Float heightOfRows = -1f; //行高，像素点， -1代表默认
 
+    private GuideTitle title;
     /**
      * 实体对象字段集_TreeSet提供Comparable按字段的index进行排序 
      */
@@ -51,13 +52,14 @@ public class GuideEntity
      * @param clazz
      * @param fields
      */
-    public GuideEntity(String eid, String eName, String entityClass, Set<GuideEntityField> fields)
+    public GuideEntity(String eid, String eName, String entityClass, Set<GuideEntityField> fields,GuideTitle title)
     {
         super();
         this.eid = eid;
         this.eName = eName;
         this.entityClass = entityClass;
         this.fields = fields;
+        this.title = title;
     }
 
     /**
@@ -155,6 +157,20 @@ public class GuideEntity
     }
 
     /**
+	 * @return the title
+	 */
+	public GuideTitle getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(GuideTitle title) {
+		this.title = title;
+	}
+
+	/**
      * 
      * 方法描述: 获取所有字段集合，用于Excel根据列名取字段<br>
      * 创建人: 唐雄飞  <br>
@@ -170,4 +186,12 @@ public class GuideEntity
         }
         return maps;
     }
+    
+    public String getGuideTitle(){
+    	if(this.fields != null){
+    		return title.getExcelTitle().trim();
+    	}
+    	return null;
+    }
+    
 }

@@ -44,6 +44,7 @@ import com.tenney.excel2entity.lang.excel.ExcelBuilder;
 import com.tenney.excel2entity.lang.xml.XmlParser;
 import com.tenney.excel2entity.support.GuideEntity;
 import com.tenney.excel2entity.support.GuideEntityField;
+import com.tenney.excel2entity.support.GuideTitle;
 import com.tenney.excel2entity.support.IExcelReadCallBack;
 
 
@@ -502,6 +503,26 @@ public class ExcelGuideProvider
                             
                             entity.getFields().add(field);
                         }
+                        
+                        Iterator<Element> itTitles = eEntity.elementIterator(ExcelConstants.GUIDE_CONFIG_TITLE);
+                        while(itTitles.hasNext()){
+                            Element eTitle = itTitles.next();
+                            String fName = StringUtils.trim(eTitle.attributeValue(ExcelConstants.GUIDE_CONFIG_FIELD_NAME));
+                            if(StringUtils.isBlank(fName)){
+                                throw new ExcelGuideException("必须指定字段名: " + eid + " -> " + eTitle.getName() + " -> " + ExcelConstants.GUIDE_CONFIG_FIELD_NAME);
+                            }
+                            GuideTitle title = new GuideTitle();
+                            //字段名
+                            title.setName(fName);
+                            //表格标题
+                            title.setExcelTitle(StringUtils.trim(eTitle.attributeValue(ExcelConstants.GUIDE_CONFIG_FIELD_EXCEL)));
+                            //合并行
+                            title.setRowspan(NumberUtils.createInteger(eTitle.attributeValue(ExcelConstants.GUIDE_CONFIG_TITLE_ROWSPAN)));
+                            //合并列
+                            title.setColspan(NumberUtils.createInteger(eTitle.attributeValue(ExcelConstants.GUIDE_CONFIG_TITLE_COLSPAN)));
+                            entity.setTitle(title);
+                        }
+                        
                         
                         if(entity.getFields().isEmpty()){
                             throw new ExcelGuideException("必须提供至少一个字段的配置:" + eid);
