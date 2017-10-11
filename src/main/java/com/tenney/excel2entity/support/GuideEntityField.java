@@ -333,7 +333,7 @@ public class GuideEntityField implements Comparable<GuideEntityField>
      * @return <br>
      */
     public String getEntryKey(String eValue){
-        if(this.entrys != null && StringUtils.isBlank(eValue)){
+        if(this.entrys != null && StringUtils.isNotBlank(eValue)){
             for(String v : this.entrys.keySet()){
                 if(eValue.equals(this.entrys.get(v))){
                     return v;
